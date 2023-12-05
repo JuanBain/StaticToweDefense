@@ -15,25 +15,31 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-        SpawnEnemy();
-        SpawnEnemy();
+        // SpawnEnemy();
+        // SpawnEnemy();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SpawnEnemy();
+            // SpawnEnemy();
         }
     }
 
-    private void SpawnEnemy()
+    public void SpawnEnemy(float newHealth, float newDamage)
     {
         int angle = Random.Range(0, 360);
+
         float distanceToSpawn = (PlayerController.Instance.Range + distanceOfRange);
         float x = distanceToSpawn * Mathf.Cos(angle);
-        float y = distanceToSpawn * Mathf.Sin(angle);
-        var newEnemy = Instantiate(enemy, new Vector3(x, y, 0), quaternion.identity);
-        EnemysController.Instance.Enemies.Add(newEnemy.GetComponent<BaseEnemy>());
+        float y = distanceToSpawn * Mathf.Sin(angle) + PlayerController.Instance.Player.transform.position.y;
+
+        GameObject newEnemy = Instantiate(enemy, new Vector3(x, y, 0), quaternion.identity);
+        BaseEnemy newBaseEnemy = newEnemy.GetComponent<BaseEnemy>();
+        newBaseEnemy.Initialize(newHealth, newDamage);
+
+        WavesController.Instance.AddEnemy(newBaseEnemy);
+        EnemysController.Instance.Enemies.Add(newBaseEnemy);
     }
 }

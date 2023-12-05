@@ -15,7 +15,7 @@ namespace _Main.Scripts
             base.OnTriggerEnter2D(other);
             if (other.CompareTag("Player"))
             {
-                PlayerController.Instance.DoDamage(damage);
+                PlayerController.Instance.TakeDamage(damage);
             }
         }
     }

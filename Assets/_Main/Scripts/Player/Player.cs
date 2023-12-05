@@ -23,10 +23,10 @@ public class Player : MonoBehaviour
         UpdateRange();
     }
 
-    private void UpdateRange()
+    public void UpdateRange()
     {
         _collider2D.radius = PlayerController.Instance.Range;
-        GetComponent<RangeRenderer>().DrawCircle(40, PlayerController.Instance.Range);
+        GetComponent<RangeRenderer>().DrawCircle(100, PlayerController.Instance.Range);
     }
 
     private void Update()

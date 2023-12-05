@@ -20,13 +20,8 @@ public class BaseEnemy : MonoBehaviour
     [SerializeField]
     private Image healthBar;
 
-    private Rigidbody2D rb;
-
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
-
+    [SerializeField]
+    private float timeInCollider;
 
     public virtual void MoveEnemy(Vector3 newPosition)
     {
@@ -43,12 +38,25 @@ public class BaseEnemy : MonoBehaviour
         if (other.CompareTag("Bullet"))
         {
             Debug.Log("Bullet choco");
-            DoDamage(PlayerController.Instance.Damage);
+            TakeDamage(PlayerController.Instance.Damage);
             Destroy(other.gameObject);
         }
     }
 
-    public virtual void DoDamage(float damage)
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            timeInCollider += Time.deltaTime;
+            if (timeInCollider >= 1)
+            {
+                PlayerController.Instance.TakeDamage(damage);
+                timeInCollider = 0;
+            }
+        }
+    }
+
+    public virtual void TakeDamage(float damage)
     {
         currentHealth -= damage;
         UpdateHealthBar();
@@ -67,10 +75,15 @@ public class BaseEnemy : MonoBehaviour
     {
         EnemysController.Instance.Enemies.Remove(this);
         EnemysController.Instance.EnemiesInRange.Remove(this);
+        WavesController.Instance.RemoveEnemy(this);
         Destroy(this.gameObject);
     }
 
-    public virtual void DoDamage()
+
+    public virtual void Initialize(float newHealth, float newDamage)
     {
+        this.health = newHealth;
+        this.damage = newDamage;
+        currentHealth = newHealth;
     }
 }

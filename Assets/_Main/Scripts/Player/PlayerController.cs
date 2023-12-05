@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using _Main.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,9 +17,11 @@ public class PlayerController : Singleton<PlayerController>
 
     [SerializeField]
     private Image healthBar;
+
     private void Start()
     {
         currentHealth = health;
+        UpdateHealthBar();
     }
 
     public float Damage
@@ -48,9 +49,12 @@ public class PlayerController : Singleton<PlayerController>
         set => range = value;
     }
 
+    public float CurrentHealth => currentHealth;
+
+
     public Transform Player => player;
 
-    public void DoDamage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         currentHealth -= damageTaken;
         UpdateHealthBar();
@@ -63,6 +67,7 @@ public class PlayerController : Singleton<PlayerController>
     private void UpdateHealthBar()
     {
         healthBar.fillAmount = currentHealth / health;
+        UIStatsController.Instance.UpdateHealth();
     }
 
     protected override void Awake()
