@@ -12,7 +12,6 @@ public class DetectEnemies : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("Enemy in range");
             EnemysController.Instance.EnemiesInRange.Add(other.gameObject.GetComponent<BaseEnemy>());
         }
     }
@@ -21,7 +20,6 @@ public class DetectEnemies : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("Enemy out of range");
             EnemysController.Instance.EnemiesInRange.Remove(other.gameObject.GetComponent<BaseEnemy>());
         }
     }

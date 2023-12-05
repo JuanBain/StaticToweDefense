@@ -8,7 +8,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float range, damage, health, timeToShoot, timeToNextShoot, bulletSpeed;
+    private CircleCollider2D _collider2D;
+
+    [SerializeField]
+    private float timeToNextShoot;
 
 
     [SerializeField]
@@ -16,19 +19,25 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        timeToNextShoot = timeToShoot;
-        CreateRangeMesh();
+        timeToNextShoot = PlayerController.Instance.TimeToShoot;
+        UpdateRange();
+    }
+
+    private void UpdateRange()
+    {
+        _collider2D.radius = PlayerController.Instance.Range;
+        GetComponent<RangeRenderer>().DrawCircle(40, PlayerController.Instance.Range);
     }
 
     private void Update()
     {
         if (timeToNextShoot <= 0)
         {
-            BaseEnemy enemy = GetClosestEnemy();
-            if (CheckEnemyInRange(enemy))
+            if (EnemysController.Instance.EnemiesInRange.Count != 0)
             {
+                BaseEnemy enemy = GetClosestEnemy();
                 Attack(enemy);
-                timeToNextShoot = timeToShoot;
+                timeToNextShoot = PlayerController.Instance.TimeToShoot;
             }
         }
         else
@@ -37,33 +46,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void CreateRangeMesh()
-    {
-        
-    }
-    private bool CheckEnemyInRange(BaseEnemy enemy)
-    {
-        if (Vector3.Distance(enemy.transform.position, transform.position) <= range)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
 
     private void Attack(BaseEnemy enemy)
     {
         var bulletSpawned = Instantiate(bullet, this.transform.position, quaternion.identity);
-        bulletSpawned.transform.DOMove(enemy.transform.position, bulletSpeed / 10f).OnComplete(() => { }).Play();
+        bulletSpawned.transform.DOMove(enemy.transform.position, PlayerController.Instance.BulletSpeed / 10f)
+            .OnComplete(() => { }).Play();
         Debug.Log("MoveBullet");
     }
 
     private BaseEnemy GetClosestEnemy()
     {
-        BaseEnemy closestEnemy = EnemysController.Instance.Enemies[0];
+        BaseEnemy closestEnemy = EnemysController.Instance.EnemiesInRange[0];
         var distance = Vector3.Distance(this.transform.position, closestEnemy.transform.position);
-        foreach (BaseEnemy enemy in EnemysController.Instance.Enemies)
+        foreach (BaseEnemy enemy in EnemysController.Instance.EnemiesInRange)
         {
             var newDistance = Vector3.Distance(this.transform.position, enemy.transform.position);
             if (newDistance < distance)

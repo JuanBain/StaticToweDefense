@@ -14,7 +14,7 @@ public class RangeRenderer : MonoBehaviour
     }
 
 
-    void DrawCircle(int steps, float radius)
+    public void DrawCircle(int steps, float radius)
     {
         CircleRenderer.positionCount = steps+1;
         for (int currentStep = 0; currentStep <= steps - 1; currentStep++)
@@ -29,6 +29,6 @@ public class RangeRenderer : MonoBehaviour
             CircleRenderer.SetPosition(currentStep, currentPosition);
         }
 
-        CircleRenderer.SetPosition(steps, new Vector3(1.5f, 0, 0));
+        CircleRenderer.SetPosition(steps, new Vector3(radius, 0, 0));
     }
 }

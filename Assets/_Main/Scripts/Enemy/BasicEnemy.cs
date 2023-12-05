@@ -7,7 +7,16 @@ namespace _Main.Scripts
     {
         private void Start()
         {
-            MoveEnemy(GameModel.Instance.Player.position);
+            MoveEnemy(PlayerController.Instance.Player.position);
+        }
+
+        public override void OnTriggerEnter2D(Collider2D other)
+        {
+            base.OnTriggerEnter2D(other);
+            if (other.CompareTag("Player"))
+            {
+                PlayerController.Instance.DoDamage(damage);
+            }
         }
     }
 }

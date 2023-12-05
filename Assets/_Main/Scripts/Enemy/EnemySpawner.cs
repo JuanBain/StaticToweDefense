@@ -11,7 +11,7 @@ public class EnemySpawner : MonoBehaviour
     private GameObject enemy;
 
     [SerializeField]
-    private float spawnDistance = 5f;
+    private float distanceOfRange;
 
     void Start()
     {
@@ -19,11 +19,20 @@ public class EnemySpawner : MonoBehaviour
         SpawnEnemy();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SpawnEnemy();
+        }
+    }
+
     private void SpawnEnemy()
     {
         int angle = Random.Range(0, 360);
-        float x = spawnDistance * Mathf.Cos(angle);
-        float y = spawnDistance * Mathf.Sin(angle);
+        float distanceToSpawn = (PlayerController.Instance.Range + distanceOfRange);
+        float x = distanceToSpawn * Mathf.Cos(angle);
+        float y = distanceToSpawn * Mathf.Sin(angle);
         var newEnemy = Instantiate(enemy, new Vector3(x, y, 0), quaternion.identity);
         EnemysController.Instance.Enemies.Add(newEnemy.GetComponent<BaseEnemy>());
     }
